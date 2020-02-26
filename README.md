@@ -1,5 +1,5 @@
 # TableView-MVVM
-Loading Tableview from API, 
+Loading Tableview from API
 
 * Design programatically(No Storyboard)
 * Implemented required test cases
