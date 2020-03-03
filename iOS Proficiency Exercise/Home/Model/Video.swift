@@ -9,13 +9,13 @@
 import Foundation
 
 // MARK: - Video
-struct Video: Codable {
+struct Video: Decodable {
     var title: String?
     var rows: [Row]?
 }
 
 // MARK: - Row
-struct Row: Codable {
+struct Row: Decodable {
     var title, description: String?
     var imageHref: String?
     
@@ -23,5 +23,17 @@ struct Row: Codable {
         case title
         case description
         case imageHref
+    }
+}
+
+
+extension Video: Parceable {
+    static func parseObject(data: Data) -> Result<Video, ErrorResult> {
+        let decoder = JSONDecoder()
+        if let result = try? decoder.decode(Video.self, from: data) {
+            return Result.success(result)
+        } else {
+            return Result.failure(ErrorResult.parser(string: "Unable to parse FeedsModel results"))
+        }
     }
 }

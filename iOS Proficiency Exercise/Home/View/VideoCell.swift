@@ -63,11 +63,12 @@ class VideoCell: UITableViewCell {
     }
     
     func setupThumbnailImage() {
-        
+   
         if let thumbnailImageUrl = video?.imageHref {
             thumbnailImageView.loadImageUsingUrl(urlString: thumbnailImageUrl)
         }else{
-            thumbnailImageView.image = UIImage(named: "placeholder")
+            // for empty images
+            thumbnailImageView.loadImageUsingUrl(urlString: "placeholder")
         }
         
     }
@@ -78,7 +79,6 @@ class VideoCell: UITableViewCell {
         label.text = ""
         label.numberOfLines = 0
         label.font = UIFont.boldSystemFont(ofSize: 20.0)
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -95,7 +95,6 @@ class VideoCell: UITableViewCell {
         subLbl.numberOfLines = 0
         subLbl.textColor = .lightGray
         subLbl.font = UIFont.systemFont(ofSize: 14.0)
-        subLbl.translatesAutoresizingMaskIntoConstraints = false
         return subLbl
     }()
     

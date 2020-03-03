@@ -8,6 +8,17 @@
 
 import UIKit
 
+enum Result<T, E: Error> {
+    case success(T)
+    case failure(E)
+}
+
+enum ErrorResult: Error {
+    case network(string: String)
+    case parser(string: String)
+    case custom(string: String)
+}
+
 class ApiService: NSObject {
     
     static let sharedInstance = ApiService()
@@ -46,7 +57,7 @@ class ApiService: NSObject {
                 
                 let decoder = JSONDecoder()
                 let videos  = try decoder.decode(T.self, from: modifiedResponseData)
-                print(videos)
+               
                 DispatchQueue.main.async {
                     success(videos)
                 }

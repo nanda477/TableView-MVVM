@@ -30,7 +30,7 @@ class HomeViewModel {
             self?.feedDelegate?.videoFeedData(true)
             
         }) { [weak self] (error) in
-            print(error)
+
             self?.videoFeedFailed = error
             self?.feedDelegate?.videoFeedData(false)
         }

@@ -18,14 +18,13 @@ class CustomImageView: UIImageView {
         
         imageUrlString = urlString
         
-        image = UIImage(named: "placeholder")
-        
         guard let url = URL(string: urlString) else{
             // incorrect url
-            print("image not found")
+            self.image = UIImage(named: "placeholder")!
+            imageCache.setObject(UIImage(named: "placeholder")!, forKey: urlString as NSString)
             return
         }
-
+        // if already stored in cache
         if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
             self.image = imageFromCache
             return
@@ -33,8 +32,13 @@ class CustomImageView: UIImageView {
         
         URLSession.shared.dataTask(with: url) { (data, responce, error) in
             
+            // if any error occured
             if error != nil {
-                print(error ?? "")
+               
+                DispatchQueue.main.async {
+                    imageCache.setObject(UIImage(named: "placeholder")!, forKey: urlString as NSString)
+                    self.image = UIImage(named: "placeholder")!
+                }
                 return
             }
             
@@ -45,9 +49,19 @@ class CustomImageView: UIImageView {
                     if self.imageUrlString == urlString {
                         self.image = imageToCache
                     }
+                    
                     if imageToCache != nil {
                         imageCache.setObject(imageToCache!, forKey: urlString as NSString)
+                    }else{
+                        // image not available
+                        self.image = UIImage(named: "placeholder")!
+                        imageCache.setObject(UIImage(named: "placeholder")!, forKey: urlString as NSString)
                     }
+                    
+                }else{
+                    // data not availabe
+                     self.image = UIImage(named: "placeholder")!
+                     imageCache.setObject(UIImage(named: "placeholder")!, forKey: urlString as NSString)
                 }
                 
                 

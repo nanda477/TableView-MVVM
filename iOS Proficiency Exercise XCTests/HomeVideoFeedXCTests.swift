@@ -14,20 +14,20 @@ class HomeVideoFeedXCTests: XCTestCase {
     
     
     //Model Stucture checking
-    func testFetchVideoFeed() throws {
-        
-        let firstRow = Row(title: "firstvideo", description: "its a short video about ios", imageHref: "https://ios.jpg")
-        let secondRow = Row(title: "secondvideo", description: "its a video about ios", imageHref: "https://apple.jpg")
-        
-        let video = Video(title: "title", rows: [firstRow, secondRow])
-        let jsonEncoder = JSONEncoder()
-        let videosData = try jsonEncoder.encode(video)
-        
-        //positive case
-        XCTAssertNotNil(videosData)
-        //negative case
-        // XCTAssertNil(videosData)
-    }
+//    func testFetchVideoFeed() throws {
+//        
+//        let firstRow = Row(title: "firstvideo", description: "its a short video about ios", imageHref: "https://ios.jpg")
+//        let secondRow = Row(title: "secondvideo", description: "its a video about ios", imageHref: "https://apple.jpg")
+//
+//        let video = Video(title: "title", rows: [firstRow, secondRow])
+//        let jsonEncoder = JSONEncoder()
+//        let videosData = try jsonEncoder.encode(video)
+//
+//        //positive case
+//        XCTAssertNotNil(videosData)
+//        //negative case
+//        // XCTAssertNil(videosData)
+//    }
     
     
     func testVideoModel() {
@@ -71,8 +71,7 @@ class HomeVideoFeedXCTests: XCTestCase {
             //-ve case
             //XCTAssertNil(videoModel)
         }) { (error) in
-            
-            print(error)
+    
             XCTFail(error)
         }
     }
@@ -96,7 +95,7 @@ class HomeVideoFeedXCTests: XCTestCase {
                 let encodeResponseData = String(data: data, encoding: String.Encoding.isoLatin1)
                 guard let modifiedResponseData = encodeResponseData?.data(using: String.Encoding.utf8) else {
                     
-                    print("could not Encode data")
+                    //could not Encode data
                     return
                 }
                 
@@ -107,7 +106,6 @@ class HomeVideoFeedXCTests: XCTestCase {
             } catch let jsonError {
                 
                 XCTFail(jsonError.localizedDescription)
-                print(jsonError.localizedDescription)
             }
         }.resume()
     }

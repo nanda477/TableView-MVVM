@@ -35,15 +35,19 @@ class HomeController: UITableViewController {
         
         loadIndicator = UIActivityIndicatorView()
         loadIndicator.color = .darkGray
-        loadIndicator.style = .large
-        loadIndicator.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 13.0, *) {
+            loadIndicator.style = .large
+        } else {
+            loadIndicator.style = .whiteLarge
+        }
+        loadIndicator.translatesAutoresizingMaskIntoConstraints                      = false
         view.addSubview(loadIndicator)
         loadIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loadIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     func setupRefreshVideoFeed() {
-        refreshLoader = false
+        refreshLoader                        = false
         dragToRefreshControl                 = UIRefreshControl()
         dragToRefreshControl.attributedTitle = NSAttributedString(string: "Fetching....")
         dragToRefreshControl.tintColor       = .gray
@@ -68,7 +72,8 @@ class HomeController: UITableViewController {
         if !refreshLoader {
             loadIndicator.startAnimating()
         }
-        
+        videosFeedData = nil
+        tableView.reloadData()
         //API calling from viewmodel class
         viewModel.feedDelegate = self
         viewModel.fetchVideoFeed()
@@ -103,17 +108,15 @@ extension HomeController: HomeVideoFeedDelegate {
     // will fire when Viewmodel gets data
     func videoFeedData(_ status: Bool) {
         
+      
+        hideRefreshAnimation()
         guard status else {
             
             let errorMsg = self.viewModel.videoFeedFailed
             DispatchQueue.main.async {
-                self.loadIndicator.stopAnimating()
-                if self.dragToRefreshControl.isRefreshing == true {
-                    self.dragToRefreshControl.endRefreshing()
-                }
+              
                 
                 self.popupAlert(title: "Alert..!", message: errorMsg, actionTitles: ["Dismiss"], actions:[{ [weak self] dismissAction in
-                    
                     self?.dismiss(animated: true, completion: nil)
                     
                     }, nil])
@@ -122,15 +125,19 @@ extension HomeController: HomeVideoFeedDelegate {
             return
         }
         
-        
         self.videosFeedData = self.viewModel.videoFeedResult
-        
         self.tableView.reloadData()
-        self.loadIndicator.stopAnimating()
-        if self.dragToRefreshControl.isRefreshing == true {
-            self.dragToRefreshControl.endRefreshing()
-        }
         
+    }
+    
+    func hideRefreshAnimation() {
+        DispatchQueue.main.async {
+             self.loadIndicator.stopAnimating()
+                   if self.dragToRefreshControl.isRefreshing == true {
+                       self.dragToRefreshControl.endRefreshing()
+                   }
+        }
+       
     }
     
     
